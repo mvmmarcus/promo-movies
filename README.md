@@ -1,12 +1,12 @@
 
 # PROMO MOVIES
 
-This is a [Next.js](https://nextjs.org/) application. 
-This is a two-page film site, one listing the films (and you can filter them by genre) and another page dedicated to each film, containing more information.
+A hybrid [Next.js](https://nextjs.org/) application. 
+This is a two-page site, one listing the movies (and you can filter them by genre and paginate) and another page dedicated to each movie, containing more information.
 
 ## What is inside?
 
-### [Live Site](https://promo-movie.netlify.app/?page=1)
+### [Live Site](https://promo-movies.netlify.app)
 
 ![](public/img/promo-movie.gif)
 
