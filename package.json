@@ -27,6 +27,8 @@
     "@types/react-js-pagination": "^3.0.4",
     "@types/react-paginate": "^7.1.1",
     "@types/react-slick": "^0.23.5",
+    "axios": "^0.21.1",
+    "lodash": "^4.17.21",
     "lodash.xor": "^4.5.0",
     "next": "10.2.0",
     "next-pwa": "^5.2.21",

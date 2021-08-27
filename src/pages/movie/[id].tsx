@@ -1,6 +1,12 @@
 import { HighlightProps } from 'components/Highlight'
-import { MovieCardProps } from 'components/MovieCard'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { MoviesProps } from 'pages'
+import { FetcherClient } from 'services/api/adapter'
+import moviesApi from 'services/movies'
+import {
+  IMostPopularMoviesResponse,
+  IMovieResponse
+} from 'services/movies/types'
 
 import MovieTemplate from 'templates/Movie'
 
@@ -14,12 +20,10 @@ export default function MoviePage({ data }: MoviePageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const moviesResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`
-    )
-    const { results } = await moviesResponse.json()
+    const moviesResponse = await moviesApi.getMostPopularMovies('1')
+    const { results } = moviesResponse?.data
 
-    const paths = results?.map((item: MovieCardProps) => {
+    const paths = results?.map((item: MoviesProps) => {
       return { params: { id: item?.id?.toString() } }
     })
 
@@ -44,20 +48,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   try {
-    const moviesResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.API_KEY}&page=1`
-    )
-    const data = await moviesResponse.json()
+    const movieResponse = await moviesApi.getMovieById(id as string)
+    const {
+      title,
+      tagline,
+      release_date,
+      vote_average,
+      overview,
+      poster_path,
+      backdrop_path
+    }: IMovieResponse = movieResponse?.data
 
     return {
       props: {
         data: {
-          ...data,
-          releaseDate: data?.release_date,
-          popularity: data?.vote_average,
-          resume: data?.overview,
-          floatImage: data?.poster_path,
-          backgroundImage: data?.backdrop_path
+          title,
+          tagline,
+          releaseDate: release_date,
+          popularity: vote_average,
+          resume: overview,
+          floatImage: poster_path,
+          backgroundImage: backdrop_path
         }
       },
       revalidate: 60

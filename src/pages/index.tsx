@@ -1,5 +1,10 @@
 import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
+import { FetcherClient } from 'services/api/adapter'
+import {
+  IGenresResponse,
+  IMostPopularMoviesResponse
+} from 'services/movies/types'
 
 import Home, { HomeTemplateProps } from 'templates/Home'
 
@@ -29,15 +34,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   try {
     const page = query?.page || 1
 
-    const moviesResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}&page=${page}`
-    )
-    const { results, total_results } = await moviesResponse.json()
+    const moviesReponse = await FetcherClient('/movies/popular', {
+      params: { page }
+    })
+    const { results, total_results }: IMostPopularMoviesResponse =
+      moviesReponse?.data
 
-    const genresResponse = await fetch(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.API_KEY}`
-    )
-    const { genres } = await genresResponse.json()
+    const genreResponse = await FetcherClient('/movies/genres')
+    const { genres }: IGenresResponse = genreResponse?.data
 
     const movies = results?.map((movie: MoviesProps) => {
       const { release_date, poster_path, genre_ids } = movie
